@@ -8,9 +8,11 @@
     <header class="border-b border-gray-800/50 backdrop-blur-sm bg-black/20 sticky top-0 z-50">
         <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
             <a href="/" class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-supabase-green to-emerald-600 flex items-center justify-center glow-green">
+                <div
+                    class="w-10 h-10 rounded-lg bg-gradient-to-br from-supabase-green to-emerald-600 flex items-center justify-center glow-green">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                 </div>
                 <span class="text-xl font-semibold tracking-tight">Hello Super</span>
@@ -34,59 +36,81 @@
             </div>
 
             <!-- Create Task Form -->
-            <form 
-                hx-post="/tasks/create" 
-                hx-target="#task-list" 
-                hx-swap="afterbegin"
+            <form id="create-task-form" hx-post="/tasks/create" hx-target="#task-list" hx-swap="afterbegin"
                 hx-encoding="multipart/form-data"
                 hx-on::after-request="if(event.detail.successful) { this.reset(); document.getElementById('file-name').textContent = 'No file chosen'; }"
-                class="bg-white/5 border border-gray-800/50 rounded-2xl p-6 mb-8"
-            >
+                class="bg-white/5 border border-gray-800/50 rounded-2xl p-6 mb-8">
                 <div class="flex flex-col gap-4">
                     <div>
-                        <input
-                            type="text"
-                            name="title"
-                            required
-                            placeholder="What needs to be done?"
-                            class="w-full px-4 py-3 rounded-xl bg-black/30 border border-gray-700 focus:border-supabase-green focus:ring-1 focus:ring-supabase-green text-white placeholder-gray-500 transition-colors"
-                        >
+                        <input type="text" name="title" required placeholder="What needs to be done?"
+                            class="w-full px-4 py-3 rounded-xl bg-black/30 border border-gray-700 focus:border-supabase-green focus:ring-1 focus:ring-supabase-green text-white placeholder-gray-500 transition-colors">
                     </div>
                     <div>
-                        <input
-                            type="text"
-                            name="description"
-                            placeholder="Add a description (optional)"
-                            class="w-full px-4 py-3 rounded-xl bg-black/30 border border-gray-700 focus:border-supabase-green focus:ring-1 focus:ring-supabase-green text-white placeholder-gray-500 transition-colors"
-                        >
+                        <input type="text" name="description" placeholder="Add a description (optional)"
+                            class="w-full px-4 py-3 rounded-xl bg-black/30 border border-gray-700 focus:border-supabase-green focus:ring-1 focus:ring-supabase-green text-white placeholder-gray-500 transition-colors">
                     </div>
                     <div class="flex gap-4 items-center">
                         <!-- File Upload -->
-                        <label class="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl bg-black/30 border border-gray-700 hover:border-gray-600 cursor-pointer transition-colors">
+                        <label
+                            class="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl bg-black/30 border border-gray-700 hover:border-gray-600 cursor-pointer transition-colors">
                             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                             </svg>
                             <span id="file-name" class="text-gray-500 text-sm truncate">No file chosen</span>
-                            <input 
-                                type="file" 
-                                name="attachment" 
-                                accept="image/*,.pdf"
-                                class="hidden"
-                                onchange="document.getElementById('file-name').textContent = this.files[0]?.name || 'No file chosen'"
-                            >
+                            <input type="file" name="attachment" accept="image/*,.pdf" class="hidden"
+                                onchange="document.getElementById('file-name').textContent = this.files[0]?.name || 'No file chosen'">
                         </label>
-                        <button
-                            type="submit"
-                            class="px-6 py-3 bg-supabase-green hover:bg-emerald-500 text-black font-semibold rounded-xl transition-all hover:scale-105 flex items-center gap-2"
-                        >
+                        <button type="submit"
+                            class="px-6 py-3 bg-supabase-green hover:bg-emerald-500 text-black font-semibold rounded-xl transition-all hover:scale-105 flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4" />
                             </svg>
                             Add Task
                         </button>
                     </div>
                 </div>
             </form>
+
+            <!-- Progress Bar -->
+            <div id="progress-container" class="hidden mb-8 p-4 rounded-xl bg-white/5 border border-gray-800/50">
+                <div class="flex justify-between mb-2 text-sm text-gray-400">
+                    <span>Uploading attachment...</span>
+                    <span id="progress-text">0%</span>
+                </div>
+                <div class="w-full bg-gray-700 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-supabase-green h-2.5 rounded-full transition-all duration-300"
+                        style="width: 0%"></div>
+                </div>
+            </div>
+
+            <script>
+                htmx.on('#create-task-form', 'htmx:xhr:progress', function (evt) {
+                    if (evt.detail.lengthComputable) {
+                        var percentComplete = (evt.detail.loaded / evt.detail.total) * 100;
+                        htmx.find('#progress-bar').style.width = percentComplete + '%';
+                        htmx.find('#progress-text').innerText = Math.round(percentComplete) + '%';
+                    }
+                });
+
+                htmx.on('#create-task-form', 'htmx:beforeRequest', function (evt) {
+                    // Only show progress bar if there is a file attached
+                    var fileInput = htmx.find('input[name="attachment"]');
+                    if (fileInput.files.length > 0) {
+                        htmx.find('#progress-container').classList.remove('hidden');
+                        htmx.find('#progress-bar').style.width = '0%';
+                        htmx.find('#progress-text').innerText = '0%';
+                    }
+                });
+
+                htmx.on('#create-task-form', 'htmx:afterRequest', function (evt) {
+                    setTimeout(function () {
+                        htmx.find('#progress-container').classList.add('hidden');
+                        htmx.find('#progress-bar').style.width = '0%';
+                    }, 1000); // Keep showing for a second after completion
+                });
+            </script>
 
             <!-- Error Message -->
             {% if error %}
@@ -98,11 +122,13 @@
             <!-- Task List -->
             <div id="task-list" class="space-y-3">
                 {% for task in tasks %}
-                    {% include "tasks/partials/task_item.html" %}
+                {% include "tasks/partials/task_item.html" %}
                 {% else %}
                 <div id="empty-state" class="text-center py-12 text-gray-500">
-                    <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
                     <p class="text-lg mb-2">No tasks yet</p>
                     <p class="text-sm">Create your first task above to get started!</p>
@@ -119,16 +145,11 @@
                     </span>
                 </div>
                 <div class="flex items-center gap-3">
-                    <button 
-                        id="refresh-btn"
-                        hx-get="/tasks"
-                        hx-target="body"
-                        hx-swap="innerHTML"
-                        class="text-gray-400 hover:text-white transition-colors"
-                        title="Refresh tasks"
-                    >
+                    <button id="refresh-btn" hx-get="/tasks" hx-target="body" hx-swap="innerHTML"
+                        class="text-gray-400 hover:text-white transition-colors" title="Refresh tasks">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                         </svg>
                     </button>
                     <span id="realtime-status" class="flex items-center gap-2">
@@ -144,83 +165,82 @@
 
 {% block scripts %}
 <script>
-// Real-time updates using Server-Sent Events
-(function() {
-    let eventSource = null;
-    let reconnectAttempts = 0;
-    const maxReconnectAttempts = 5;
-    
-    function updateStatus(connected) {
-        const statusDot = document.querySelector('#realtime-status span:first-child');
-        const statusText = document.getElementById('status-text');
-        
-        if (connected) {
-            statusDot.className = 'w-2 h-2 rounded-full bg-supabase-green animate-pulse';
-            statusText.textContent = 'Live';
-        } else {
-            statusDot.className = 'w-2 h-2 rounded-full bg-yellow-500';
-            statusText.textContent = 'Reconnecting...';
+    // Real-time updates using Server-Sent Events
+    (function () {
+        let eventSource = null;
+        let reconnectAttempts = 0;
+        const maxReconnectAttempts = 5;
+
+        function updateStatus(connected) {
+            const statusDot = document.querySelector('#realtime-status span:first-child');
+            const statusText = document.getElementById('status-text');
+
+            if (connected) {
+                statusDot.className = 'w-2 h-2 rounded-full bg-supabase-green animate-pulse';
+                statusText.textContent = 'Live';
+            } else {
+                statusDot.className = 'w-2 h-2 rounded-full bg-yellow-500';
+                statusText.textContent = 'Reconnecting...';
+            }
         }
-    }
-    
-    function connectSSE() {
-        if (eventSource) {
-            eventSource.close();
-        }
-        
-        eventSource = new EventSource('/realtime/tasks/stream');
-        
-        eventSource.onopen = function() {
-            console.log('SSE connected');
-            updateStatus(true);
-            reconnectAttempts = 0;
-        };
-        
-        eventSource.onmessage = function(event) {
-            try {
-                const data = JSON.parse(event.data);
-                
-                if (data.count !== undefined) {
-                    // Update task count
-                    const countEl = document.getElementById('task-count');
-                    if (countEl) {
-                        countEl.textContent = data.count + ' task(s)';
+
+        function connectSSE() {
+            if (eventSource) {
+                eventSource.close();
+            }
+
+            eventSource = new EventSource('/realtime/tasks/stream');
+
+            eventSource.onopen = function () {
+                console.log('SSE connected');
+                updateStatus(true);
+                reconnectAttempts = 0;
+            };
+
+            eventSource.onmessage = function (event) {
+                try {
+                    const data = JSON.parse(event.data);
+
+                    if (data.count !== undefined) {
+                        // Update task count
+                        const countEl = document.getElementById('task-count');
+                        if (countEl) {
+                            countEl.textContent = data.count + ' task(s)';
+                        }
+
+                        // Update completed count
+                        const completed = data.tasks ? data.tasks.filter(t => t.is_completed).length : 0;
+                        const completedEl = document.getElementById('completed-count');
+                        if (completedEl) {
+                            completedEl.textContent = completed + ' completed';
+                        }
                     }
-                    
-                    // Update completed count
-                    const completed = data.tasks ? data.tasks.filter(t => t.is_completed).length : 0;
-                    const completedEl = document.getElementById('completed-count');
-                    if (completedEl) {
-                        completedEl.textContent = completed + ' completed';
-                    }
+                } catch (e) {
+                    console.error('Error parsing SSE data:', e);
                 }
-            } catch (e) {
-                console.error('Error parsing SSE data:', e);
-            }
-        };
-        
-        eventSource.onerror = function() {
-            console.log('SSE error, reconnecting...');
-            updateStatus(false);
-            eventSource.close();
-            
-            if (reconnectAttempts < maxReconnectAttempts) {
-                reconnectAttempts++;
-                setTimeout(connectSSE, 3000 * reconnectAttempts);
-            }
-        };
-    }
-    
-    // Start SSE connection
-    connectSSE();
-    
-    // Cleanup on page unload
-    window.addEventListener('beforeunload', function() {
-        if (eventSource) {
-            eventSource.close();
+            };
+
+            eventSource.onerror = function () {
+                console.log('SSE error, reconnecting...');
+                updateStatus(false);
+                eventSource.close();
+
+                if (reconnectAttempts < maxReconnectAttempts) {
+                    reconnectAttempts++;
+                    setTimeout(connectSSE, 3000 * reconnectAttempts);
+                }
+            };
         }
-    });
-})();
+
+        // Start SSE connection
+        connectSSE();
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function () {
+            if (eventSource) {
+                eventSource.close();
+            }
+        });
+    })();
 </script>
 {% endblock %}
-
