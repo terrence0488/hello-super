@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Sign In - Hello Super{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="border-b border-gray-800/50 backdrop-blur-sm bg-black/20">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-supabase-green to-emerald-600 flex items-center justify-center glow-green">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                </div>
+                <span class="text-xl font-semibold tracking-tight">Hello Super</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Login Form -->
+    <main class="flex-1 flex items-center justify-center px-6 py-12">
+        <div class="w-full max-w-md">
+            <!-- Card -->
+            <div class="bg-white/5 border border-gray-800/50 rounded-2xl p-8 backdrop-blur-sm">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold mb-2">Welcome back</h1>
+                    <p class="text-gray-400">Sign in to your account</p>
+                </div>
+
+                <!-- Success Message -->
+                {% if success %}
+                <div class="mb-6 p-4 rounded-xl bg-supabase-green/10 border border-supabase-green/20 text-supabase-green text-sm">
+                    {{ success }}
+                </div>
+                {% endif %}
+
+                <!-- Error Message -->
+                {% if error %}
+                <div class="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                    {{ error }}
+                </div>
+                {% endif %}
+
+                <form action="/auth/login" method="POST" class="space-y-6">
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-300 mb-2">
+                            Email address
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value="{{ email or '' }}"
+                            required
+                            autocomplete="email"
+                            class="w-full px-4 py-3 rounded-xl bg-black/30 border border-gray-700 focus:border-supabase-green focus:ring-1 focus:ring-supabase-green text-white placeholder-gray-500 transition-colors"
+                            placeholder="you@example.com"
+                        >
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-300 mb-2">
+                            Password
+                        </label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            required
+                            autocomplete="current-password"
+                            class="w-full px-4 py-3 rounded-xl bg-black/30 border border-gray-700 focus:border-supabase-green focus:ring-1 focus:ring-supabase-green text-white placeholder-gray-500 transition-colors"
+                            placeholder="••••••••"
+                        >
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button
+                        type="submit"
+                        class="w-full py-3 px-4 bg-supabase-green hover:bg-emerald-500 text-black font-semibold rounded-xl transition-all hover:scale-[1.02] glow-green"
+                    >
+                        Sign in
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="my-8 flex items-center">
+                    <div class="flex-1 border-t border-gray-800"></div>
+                    <span class="px-4 text-gray-500 text-sm">or</span>
+                    <div class="flex-1 border-t border-gray-800"></div>
+                </div>
+
+                <!-- Sign Up Link -->
+                <p class="text-center text-gray-400">
+                    Don't have an account?
+                    <a href="/auth/register" class="text-supabase-green hover:text-emerald-400 font-medium transition-colors">
+                        Sign up
+                    </a>
+                </p>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
+

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Hello Super{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'supabase': {
+                            'green': '#3ECF8E',
+                            'dark': '#1C1C1C',
+                            'darker': '#121212',
+                        }
+                    },
+                    fontFamily: {
+                        'display': ['Cabinet Grotesk', 'system-ui', 'sans-serif'],
+                        'body': ['Söhne', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- HTMX for interactivity -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    
+    <!-- Custom styles -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Space Grotesk', system-ui, sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+        
+        .glow-green {
+            box-shadow: 0 0 20px rgba(62, 207, 142, 0.3);
+        }
+        
+        .htmx-indicator {
+            opacity: 0;
+            transition: opacity 200ms ease-in;
+        }
+        
+        .htmx-request .htmx-indicator {
+            opacity: 1;
+        }
+        
+        .htmx-request.htmx-indicator {
+            opacity: 1;
+        }
+    </style>
+    
+    {% block head %}{% endblock %}
+</head>
+<body class="gradient-bg min-h-screen text-gray-100">
+    {% block content %}{% endblock %}
+    
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 space-y-2"></div>
+    
+    <script>
+        // Toast notification system
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const colors = {
+                success: 'bg-supabase-green text-black',
+                error: 'bg-red-500 text-white',
+                info: 'bg-blue-500 text-white',
+                warning: 'bg-yellow-500 text-black'
+            };
+            
+            toast.className = `${colors[type] || colors.info} px-6 py-4 rounded-xl shadow-lg flex items-center gap-3 min-w-[300px] animate-slide-in`;
+            toast.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()" class="ml-auto text-current opacity-70 hover:opacity-100">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+        
+        // Listen for HTMX events to show toasts
+        document.body.addEventListener('htmx:afterRequest', function(event) {
+            if (event.detail.xhr.status >= 400) {
+                showToast('An error occurred. Please try again.', 'error');
+            }
+        });
+        
+        document.body.addEventListener('htmx:afterSwap', function(event) {
+            // Check if the response contains an error message
+            if (event.detail.target.innerHTML.includes('text-red-400')) {
+                const errorText = event.detail.target.querySelector('.text-red-400')?.textContent;
+                if (errorText) {
+                    showToast(errorText, 'error');
+                }
+            }
+        });
+    </script>
+    
+    <style>
+        @keyframes slide-in {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .animate-slide-in {
+            animation: slide-in 0.3s ease-out;
+        }
+    </style>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>
+

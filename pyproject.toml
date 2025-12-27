@@ -1,0 +1,30 @@
+[project]
+name = "hello-super"
+version = "0.1.0"
+description = "A demo web app showcasing Supabase capabilities with Python and FastAPI"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "supabase>=2.10.0",
+    "python-dotenv>=1.0.0",
+    "jinja2>=3.1.0",
+    "python-multipart>=0.0.9",
+    "httpx>=0.27.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+]
+
+[project.scripts]
+dev = "uvicorn app.main:app --reload"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
+]
